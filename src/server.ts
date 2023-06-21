@@ -33,7 +33,7 @@ app.post('/users', async(request, reply) => {
 })
 
 app.get('/cats', async () => {
-    const cats = await prisma.user.findMany()
+    const cats = await prisma.cat.findMany()
 
     return { cats }
 })
