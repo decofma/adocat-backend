@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 app.get('/users', async () => {
     const users = await prisma.user.findMany()
 
-    return { users}
+    return { users }
 })
 
 app.post('/users', async(request, reply) => {
@@ -26,6 +26,47 @@ app.post('/users', async(request, reply) => {
             name,
             email,
             age,
+        }
+    })
+
+    return reply.status(201).send()
+})
+
+app.get('/cats', async () => {
+    const cats = await prisma.user.findMany()
+
+    return { cats }
+})
+
+// "id" TEXT NOT NULL,
+//     "name" TEXT NOT NULL,
+//     "age" TEXT NOT NULL,
+//     "gender" TEXT NOT NULL,
+//     "race" TEXT NOT NULL,
+//     "castrated" TEXT NOT NULL,
+//     "vaccines" TEXT NOT NULL,
+//     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+app.post('/cats', async(request, reply) => {
+    const createCatSchema = z.object({
+        name: z.string(),
+        age: z.string(),
+        gender: z.string(),
+        race: z.string(),
+        castrated: z.string(),
+        vaccines: z.string(),
+    })
+
+    const {name, age, gender, race, castrated, vaccines} = createCatSchema.parse(request.body)
+
+    await prisma.cat.create({
+        data: {
+            name,
+            age,
+            gender,
+            race,
+            castrated,
+            vaccines,
         }
     })
 
