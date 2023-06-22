@@ -11,23 +11,23 @@ datasource db {
 }
 
 model User {
-  id String @id @unique @default (cuid())
-  name String
-  email String
-  birthdate DateTime
-  createdAt DateTime @default(now())
+  id          String        @id @unique @default (cuid())
+  name        String
+  email       String
+  phone       String  
+  cats        Cat[]
+  createdAt   DateTime      @default(now())
 }
 
 model Cat {
-  id String @id @unique @default (cuid())
-  name String
-  age String
-  gender String
-  race String
-  castrated String
-  vaccines String
-  email String
-  phone String
-  owner String
-  createdAt DateTime @default(now())
+  id          String        @id @default (cuid())
+  name        String
+  age         String
+  gender      String
+  race        String
+  castrated   String
+  vaccines    String
+  ownerId     String?
+  owner       User?         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
 }

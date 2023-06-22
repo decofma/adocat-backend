@@ -16,16 +16,29 @@ app.post('/users', async(request, reply) => {
     const createUserSchema = z.object({
         name: z.string(),
         email: z.string().email(),
-        age: z.string(),
+        phone: z.string(),
+        cats: z.any(),
     })
 
-    const {name, email, age} = createUserSchema.parse(request.body)
+
+    const {name, email, phone, cats} = createUserSchema.parse(request.body)
+
+
+    const catData = cats
+    ? cats.map((cats: { name: any; age: any; gender: any; race: any; castrated: any; vaccines: any }) => {
+      return { name: cats.name, age: cats.age, gender: cats.gender, race: cats.race, castrated: cats.castrated, vaccines: cats.vaccines || undefined }
+    })
+    : []
+
 
     await prisma.user.create({
         data: {
             name,
             email,
-            age,
+            phone,
+            cats: {
+                create: catData,
+            },
         }
     })
 
@@ -38,15 +51,6 @@ app.get('/cats', async () => {
     return { cats }
 })
 
-// "id" TEXT NOT NULL,
-//     "name" TEXT NOT NULL,
-//     "age" TEXT NOT NULL,
-//     "gender" TEXT NOT NULL,
-//     "race" TEXT NOT NULL,
-//     "castrated" TEXT NOT NULL,
-//     "vaccines" TEXT NOT NULL,
-//     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
 app.post('/cats', async(request, reply) => {
     const createCatSchema = z.object({
         name: z.string(),
@@ -55,9 +59,10 @@ app.post('/cats', async(request, reply) => {
         race: z.string(),
         castrated: z.string(),
         vaccines: z.string(),
+        ownerId: z.string(),
     })
 
-    const {name, age, gender, race, castrated, vaccines} = createCatSchema.parse(request.body)
+    const {name, age, gender, race, castrated, vaccines, ownerId} = createCatSchema.parse(request.body)
 
     await prisma.cat.create({
         data: {
@@ -67,6 +72,11 @@ app.post('/cats', async(request, reply) => {
             race,
             castrated,
             vaccines,
+            owner: {
+                connect: {
+                    id: ownerId
+                }
+            }
         }
     })
 
