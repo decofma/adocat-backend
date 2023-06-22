@@ -11,20 +11,23 @@ datasource db {
 }
 
 model User {
-  id String @id @default (cuid())
+  id String @id @unique @default (cuid())
   name String
   email String
-  age String
+  birthdate DateTime
   createdAt DateTime @default(now())
 }
 
 model Cat {
-  id String @id @default (cuid())
+  id String @id @unique @default (cuid())
   name String
   age String
   gender String
   race String
   castrated String
   vaccines String
+  email String
+  phone String
+  owner String
   createdAt DateTime @default(now())
 }
