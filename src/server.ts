@@ -16,12 +16,13 @@ app.post('/users', async(request, reply) => {
     const createUserSchema = z.object({
         name: z.string(),
         email: z.string().email(),
+        password: z.string(),
         phone: z.string(),
         cats: z.any(),
     })
 
 
-    const {name, email, phone, cats} = createUserSchema.parse(request.body)
+    const {name, email, password, phone, cats} = createUserSchema.parse(request.body)
 
 
     const catData = cats
@@ -35,6 +36,7 @@ app.post('/users', async(request, reply) => {
         data: {
             name,
             email,
+            password,
             phone,
             cats: {
                 create: catData,
